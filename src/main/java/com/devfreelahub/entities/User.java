@@ -1,19 +1,29 @@
 package com.devfreelahub.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 
     private String name;
     private String email;
     private String password;
+    private List<Project> projects; // NOVO: Lista de projetos do usuário
 
-    // Construtor: usado para criar um novo objeto User
+    // Construtor foi atualizado
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.projects = new ArrayList<>(); // NOVO: Inicializa a lista como vazia
     }
 
-    // Getters e Setters: métodos para acessar e modificar os atributos privados
+    // NOVO: Método para adicionar um projeto à lista do usuário
+    public void addProject(Project project) {
+        this.projects.add(project);
+    }
+
+    // Getters e Setters
     public String getName() {
         return name;
     }
@@ -36,5 +46,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // NOVO: Getter para a lista de projetos
+    public List<Project> getProjects() {
+        return projects;
     }
 }

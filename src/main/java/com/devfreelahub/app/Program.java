@@ -1,35 +1,62 @@
 package com.devfreelahub.app;
 
 import com.devfreelahub.entities.Project;
+import com.devfreelahub.entities.Skill;
 import com.devfreelahub.entities.User;
+import com.devfreelahub.services.ProjectService;
 import com.devfreelahub.services.UserService;
 
 public class Program {
 
     public static void main(String[] args) {
-        System.out.println("--- Iniciando DevFreela Hub ---");
+        System.out.println("--- DevFreela Hub v2.0 ---");
 
-        // Instanciando o nosso serviço
+        // Instanciando os serviços
         UserService userService = new UserService();
+        ProjectService projectService = new ProjectService();
 
-        // Cenário 1: Criando um usuário com sucesso (simulando o CT01)
-        System.out.println("\nCenário 1: Tentativa de criar usuário válido");
-        User user1 = new User("Vinicius Junior", "vini@email.com", "123456");
-        userService.createUser(user1);
+        // --- Etapa 1: Criação do Usuário (Cliente) ---
+        System.out.println("\n[ETAPA 1] Criando um novo cliente...");
+        User cliente = new User("Empresa de Software SA", "contato@softsa.com", "senhaForte");
+        userService.createUser(cliente);
 
-        // Cenário 2: Tentando criar um usuário com nome vazio (simulando o CT02)
-        System.out.println("\nCenário 2: Tentativa de criar usuário com nome vazio");
-        User user2 = new User("", "neymar@email.com", "123456");
-        userService.createUser(user2);
+        // --- Etapa 2: Cliente cria um novo projeto ---
+        System.out.println("\n[ETAPA 2] Cliente '" + cliente.getName() + "' está criando um projeto...");
+        Project novoProjeto = new Project(
+                "Desenvolvimento de E-commerce",
+                "Plataforma completa de vendas online com carrinho e pagamento.",
+                25000.00
+        );
+        projectService.createProject(cliente, novoProjeto);
 
-        // Cenário 3: Tentando criar um usuário com email vazio
-        System.out.println("\nCenário 3: Tentativa de criar usuário com email vazio");
-        User user3 = new User("Rodrygo Goes", "", "123456");
-        userService.createUser(user3);
+        // --- Etapa 3: Adicionando habilidades necessárias ao projeto ---
+        System.out.println("\n[ETAPA 3] Adicionando habilidades requeridas ao projeto '" + novoProjeto.getTitle() + "'...");
+        Skill skillJava = new Skill("Java 17");
+        Skill skillSpring = new Skill("Spring Boot 3");
+        Skill skillDocker = new Skill("Docker");
 
-        // Instanciando outros objetos para ver a estrutura funcionando
-        System.out.println("\n--- Outras Entidades ---");
-        Project project1 = new Project("Criação de API REST", "API para sistema de e-commerce", 5000.0);
-        System.out.println("Projeto criado: " + project1.getTitle() + " | Custo: R$" + project1.getTotalCost());
+        novoProjeto.addRequiredSkill(skillJava);
+        novoProjeto.addRequiredSkill(skillSpring);
+        novoProjeto.addRequiredSkill(skillDocker);
+        System.out.println("Habilidades adicionadas!");
+
+        // --- Etapa 4: Exibindo o resumo completo ---
+        System.out.println("\n--- RESUMO GERAL ---");
+        System.out.println("Cliente: " + cliente.getName());
+        System.out.println("Email: " + cliente.getEmail());
+        System.out.println("Total de projetos do cliente: " + cliente.getProjects().size());
+
+        // Usando um laço 'for-each' para percorrer a lista de projetos do cliente
+        for (Project proj : cliente.getProjects()) {
+            System.out.println("\n  -> Projeto: " + proj.getTitle());
+            System.out.println("     Descrição: " + proj.getDescription());
+            System.out.println("     Custo: R$" + proj.getTotalCost());
+            System.out.println("     Habilidades Requeridas (" + proj.getRequiredSkills().size() + "):");
+
+            // Usando outro 'for-each' para percorrer a lista de skills do projeto
+            for (Skill skill : proj.getRequiredSkills()) {
+                System.out.println("       - " + skill.getDescription());
+            }
+        }
     }
 }
