@@ -1,6 +1,6 @@
 package com.devfreelahub.services;
 
-import com.devfreelahub.entities.User;
+import com.devfreelahub.entities.User; // Agora este import é necessário
 
 public class UserService {
 

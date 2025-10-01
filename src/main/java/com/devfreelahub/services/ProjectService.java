@@ -16,7 +16,7 @@ public class ProjectService {
             return;
         }
 
-        // Se passar nas validações, adiciona o projeto à lista do usuário
+        // This line now works because the addProject method exists in the User class
         user.addProject(project);
         System.out.println("Projeto '" + project.getTitle() + "' criado e associado ao usuário '" + user.getName() + "'.");
     }

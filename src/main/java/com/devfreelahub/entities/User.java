@@ -4,24 +4,22 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity // <-- ADICIONADO: Define esta classe como uma tabela no banco
-@Table(name = "tb_user") // <-- ADICIONADO: Define o nome da tabela
+@Entity
+@Table(name = "tb_user")
 public class User {
 
-    @Id // <-- ADICIONADO: Marca o campo como chave primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // <-- ADICIONADO: O banco vai gerar o ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String email;
     private String password;
 
-    // A anotação @OneToMany define a relação: Um Usuário para Muitos Projetos.
-    // "mappedBy" indica que a relação é gerenciada pelo campo "owner" na classe Project.
     @OneToMany(mappedBy = "owner")
     private List<Project> projects = new ArrayList<>();
 
-    // O JPA exige um construtor padrão (sem argumentos)
+    // Construtor padrão para o JPA
     public User() {
     }
 
@@ -31,8 +29,13 @@ public class User {
         this.password = password;
     }
 
+    // ✅ ESTE É O MÉTODO QUE PRECISA SER ADICIONADO
+    public void addProject(Project project) {
+        this.projects.add(project);
+        project.setOwner(this); // Garante a consistência dos dois lados da relação
+    }
+
     // --- Getters e Setters ---
-    // (Getters e setters para todos os campos, incluindo o novo 'id')
 
     public Long getId() {
         return id;
