@@ -1,29 +1,47 @@
 package com.devfreelahub.entities;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity // <-- ADICIONADO: Define esta classe como uma tabela no banco
+@Table(name = "tb_user") // <-- ADICIONADO: Define o nome da tabela
 public class User {
+
+    @Id // <-- ADICIONADO: Marca o campo como chave primária
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // <-- ADICIONADO: O banco vai gerar o ID
+    private Long id;
 
     private String name;
     private String email;
     private String password;
-    private List<Project> projects; // NOVO: Lista de projetos do usuário
 
-    // Construtor foi atualizado
+    // A anotação @OneToMany define a relação: Um Usuário para Muitos Projetos.
+    // "mappedBy" indica que a relação é gerenciada pelo campo "owner" na classe Project.
+    @OneToMany(mappedBy = "owner")
+    private List<Project> projects = new ArrayList<>();
+
+    // O JPA exige um construtor padrão (sem argumentos)
+    public User() {
+    }
+
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.projects = new ArrayList<>(); // NOVO: Inicializa a lista como vazia
     }
 
-    // NOVO: Método para adicionar um projeto à lista do usuário
-    public void addProject(Project project) {
-        this.projects.add(project);
+    // --- Getters e Setters ---
+    // (Getters e setters para todos os campos, incluindo o novo 'id')
+
+    public Long getId() {
+        return id;
     }
 
-    // Getters e Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -48,8 +66,11 @@ public class User {
         this.password = password;
     }
 
-    // NOVO: Getter para a lista de projetos
     public List<Project> getProjects() {
         return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }
