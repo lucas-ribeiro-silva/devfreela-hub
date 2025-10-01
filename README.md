@@ -2,88 +2,83 @@
 
 ![Status do Projeto](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 
-Plataforma **SaaS** para gestão de carreira de desenvolvedores freelancers, construída como um projeto de estudo e portfólio.
-
----
+Plataforma SaaS para gestão de carreira de desenvolvedores freelancers, construída como um projeto de estudo e portfólio com Java e Spring Boot.
 
 ## 📝 Sobre o Projeto
 
-O **DevFreela Hub** nasceu da necessidade de centralizar a vida de um desenvolvedor freelancer: **prospecção de clientes, gerenciamento de projetos, controle financeiro e desenvolvimento de carreira**. A plataforma visa ser a ferramenta definitiva para freelancers de tecnologia que buscam **profissionalismo e crescimento**.
+O DevFreela Hub nasceu da necessidade de centralizar a vida de um desenvolvedor freelancer: prospecção de clientes, gerenciamento de projetos, controle financeiro e desenvolvimento de carreira. A plataforma visa ser a ferramenta definitiva para freelancers de tecnologia que buscam profissionalismo e crescimento.
 
-Este projeto está sendo construído com uma **arquitetura evolutiva**, começando como um **monolito modular com Spring Boot** e evoluindo futuramente para **microsserviços**, com o objetivo de aprendizado e escalabilidade.
+Este projeto está sendo construído com uma arquitetura evolutiva, utilizando as melhores práticas do ecossistema Spring.
 
----
+## ✨ Tecnologias e Conceitos Chave
 
-## 🛠️ Tecnologias Utilizadas
-
-- **Backend:** Java 17, Spring Boot, Spring Data JPA
-- **Banco de Dados:** PostgreSQL
-- **Infraestrutura:** Docker
-- **Build:** Maven
-- **Mensageria:** RabbitMQ *(planejado)*
-- **Cloud:** Azure *(planejado)*
-- **CI/CD:** GitHub Actions *(planejado)*
-
----
+* **Backend:** Java 17, Spring Boot, Spring Data JPA
+* **Banco de Dados:** PostgreSQL (gerenciado com Docker)
+* **Design de API:** RESTful, DTOs (Data Transfer Objects)
+* **Validação:** Validação de negócio (email único)
+* **Tratamento de Exceções:** Handler global com `@RestControllerAdvice` para respostas de erro padronizadas.
+* **Build:** Maven
 
 ## 🏁 Como Iniciar
 
 Para rodar este projeto localmente, você precisará ter as seguintes ferramentas instaladas:
 
-- Java JDK 17 ou superior
-- Maven 3.8 ou superior
-- Git
-- Docker (para rodar o banco de dados PostgreSQL)
+* Java JDK 17 ou superior
+* Maven 3.8 ou superior
+* Git
+* Docker
 
-### 🔧 Passos para Configuração
+**Passos para configuração:**
 
-#### 1. Clone o Repositório
+### 1. Clone o Repositório
 
 ```bash
-git clone https://github.com/{seu-usuario-github}/devfreela-hub.git
+git clone [https://github.com/lucas-ribeiro-silva/devfreela-hub.git](https://github.com/lucas-ribeiro-silva/devfreela-hub.git)
 cd devfreela-hub
-2. Inicie o Banco de Dados com Docker
-Execute o seguinte comando para subir um container PostgreSQL:
+```
 
-bash
-Copiar código
-docker run --name devfreela-db \
-  -e POSTGRES_USER=admin \
-  -e POSTGRES_PASSWORD=admin \
-  -e POSTGRES_DB=devfreela \
-  -p 5432:5432 \
-  -d postgres
-3. Configure as Variáveis de Ambiente
-Navegue até a pasta src/main/resources
+### 2. Inicie o Banco de Dados
 
-Copie o arquivo application-dev.properties.example
+```bash
+docker run --name devfreela-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=devfreela -p 5432:5432 -d postgres
+```
 
-Renomeie a cópia para application-dev.properties
+### 3. Configure as Variáveis de Ambiente
 
-Edite o novo arquivo (se necessário) com as seguintes configurações:
+Dentro da pasta `src/main/resources`, copie o arquivo `application-dev.properties.example` e renomeie a cópia para `application-dev.properties`. Os valores padrão já funcionarão com o comando Docker acima.
 
-properties
-Copiar código
-# Configurações para ambiente de desenvolvimento local
-spring.datasource.username=admin
-spring.datasource.password=admin
-4. Execute a Aplicação
-Você pode executar o projeto de duas formas:
+### 4. Execute a Aplicação
 
-Pela IDE: Localize a classe DevfreelaHubApplication e clique em "Run"
-
-Via terminal com Maven:
-
-bash
-Copiar código
+```bash
 mvn spring-boot:run
-A API estará disponível em: http://localhost:8080
+```
 
-🤝 Como Contribuir
-Este é um projeto de estudo, mas feedbacks e sugestões são sempre bem-vindos!
+A API estará disponível em `http://localhost:8080`.
 
-Abra uma Issue para relatar bugs ou sugerir melhorias
+## 📡 Endpoints da API
 
-Faça um fork do repositório, crie sua branch e envie um Pull Request
+A seguir estão os endpoints disponíveis na API.
 
-Compartilhe este projeto com outros devs freelancers!
+### Recursos de Usuário (`/users`)
+
+| Funcionalidade | Método HTTP | Endpoint | Corpo da Requisição (Exemplo) | Resposta de Sucesso |
+| :--- | :--- | :--- | :--- | :--- |
+| Criar Usuário | `POST` | `/users` | `{ "name": "Ada Lovelace", "email": "ada@email.com", "password": "123" }` | `200 OK` + JSON do usuário criado (DTO) |
+| Listar Usuários | `GET` | `/users` | N/A | `200 OK` + Array de usuários (DTO) |
+| Buscar por ID | `GET` | `/users/{id}` | N/A | `200 OK` + JSON do usuário (DTO) |
+| Atualizar Usuário | `PUT` | `/users/{id}` | `{ "name": "Ada King", "email": "ada.king@email.com" }` | `200 OK` + JSON do usuário atualizado (DTO) |
+| Deletar Usuário | `DELETE` | `/users/{id}` | N/A | `204 No Content` |
+
+Exportar para as Planilhas
+
+### Recursos de Projeto (`/projects`)
+
+| Funcionalidade | Método HTTP | Endpoint | Corpo da Requisição (Exemplo) | Resposta de Sucesso |
+| :--- | :--- | :--- | :--- | :--- |
+| Criar Projeto | `POST` | `/projects` | `{ "title": "Novo Projeto", "description": "Descrição...", "totalCost": 5000, "ownerId": 1 }` | `200 OK` + JSON do projeto criado (DTO) |
+
+Exportar para as Planilhas
+
+## 🤝 Como Contribuir
+
+Este é um projeto de estudo, mas feedbacks e sugestões são sempre bem-vindos! Sinta-se à vontade para abrir uma `Issue` para relatar um bug ou sugerir uma nova funcionalidade.
