@@ -15,7 +15,7 @@ public class StandardError implements Serializable {
     public StandardError() {
     }
 
-    // Getters e Setters para todos os campos
+    // Getters e Setters
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Integer getStatus() { return status; }

@@ -1,11 +1,10 @@
 package com.devfreelahub.dto;
 
-import com.devfreelahub.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-public class UserDTO {
-    private Long id;
+public class UserCreateDTO {
 
     @NotBlank(message = "Campo nome é obrigatório")
     private String name;
@@ -14,19 +13,18 @@ public class UserDTO {
     @Email(message = "Formato de email inválido")
     private String email;
 
-    public UserDTO() {}
+    @NotBlank(message = "Campo senha é obrigatório")
+    @Size(min = 6, max = 20, message = "A senha deve ter entre 6 e 20 caracteres")
+    private String password;
 
-    public UserDTO(User entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.email = entity.getEmail();
+    public UserCreateDTO() {
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }

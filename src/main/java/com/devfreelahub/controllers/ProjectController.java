@@ -1,37 +1,52 @@
 package com.devfreelahub.controllers;
 
 import com.devfreelahub.dto.ProjectDTO;
-import com.devfreelahub.entities.Project;
-import com.devfreelahub.entities.User;
-import com.devfreelahub.repositories.ProjectRepository;
-import com.devfreelahub.repositories.UserRepository;
+import com.devfreelahub.services.ProjectService; // MUDOU
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/projects")
 public class ProjectController {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService; // MUDOU: Injeta o Serviço
 
-    @Autowired
-    private UserRepository userRepository;
+    @GetMapping
+    public ResponseEntity<List<ProjectDTO>> findAllProjects() {
+        List<ProjectDTO> dtoList = projectService.findAll();
+        return ResponseEntity.ok(dtoList);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<ProjectDTO> findProjectById(@PathVariable Long id) {
+        ProjectDTO dto = projectService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
 
     @PostMapping
-    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO dto) {
-        // Busca o usuário dono do projeto no banco
-        User owner = userRepository.findById(dto.getOwnerId())
-                .orElseThrow(() -> new RuntimeException("Dono do projeto não encontrado!"));
+    public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectDTO dto) {
+        ProjectDTO newDto = projectService.create(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(newDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(newDto);
+    }
 
-        // Cria a entidade Project a partir do DTO
-        Project newProject = new Project(dto.getTitle(), dto.getDescription(), dto.getTotalCost(), owner);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProjectDTO> updateProject(@PathVariable Long id, @Valid @RequestBody ProjectDTO dto) {
+        ProjectDTO updatedDto = projectService.update(id, dto);
+        return ResponseEntity.ok(updatedDto);
+    }
 
-        // Salva o novo projeto no banco
-        Project savedProject = projectRepository.save(newProject);
-
-        // Retorna o DTO do projeto salvo
-        return ResponseEntity.ok(new ProjectDTO(savedProject));
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        projectService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
